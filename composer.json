@@ -21,7 +21,6 @@
         "doctrine/phpcr-odm": "^1.4|^2.0",
         "doctrine/annotations": "^1.1.2",
         "jms/serializer-bundle": "^0.12|^1.0",
-        "liip/imagine-bundle": "^2.0",
         "mikey179/vfsStream": "^1.2"
     },
     "suggest": {
@@ -29,7 +28,6 @@
         "knplabs/gaufrette": "When using the Gaufrette adapter",
         "phpcr/phpcr-utils": "When using the Gaufrette adapter",
         "jms/serializer-bundle": "When using the serializer handler",
-        "liip/imagine-bundle": "To integrate with the Imagine library for processing images",
         "helios-ag/fm-elfinder-bundle": "When using the elFinder media browser"
     },
     "conflict": {

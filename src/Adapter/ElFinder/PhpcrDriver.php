@@ -15,7 +15,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ODM\PHPCR\Document\Generic;
 use Doctrine\ODM\PHPCR\Document\Resource;
 use Doctrine\ODM\PHPCR\DocumentManager;
-use Imagine\Filter\ FilterInterface;
+use FM\ElfinderBundle\Session\ElFinderSession;
 use PHPCR\Util\PathHelper;
 use Symfony\Cmf\Bundle\MediaBundle\DirectoryInterface;
 use Symfony\Cmf\Bundle\MediaBundle\Doctrine\Phpcr\Directory;
@@ -48,7 +48,6 @@ class PhpcrDriver extends \elFinderVolumeDriver
 
     protected $mediaManager;
     protected $mediaHelper;
-    protected $imagineFilter;
 
     /**
      * @var array
@@ -62,19 +61,19 @@ class PhpcrDriver extends \elFinderVolumeDriver
      * @param string                $managerName
      * @param MediaManagerInterface $mediaManager
      * @param CmfMediaHelper        $mediaHelper
-     * @param bool|FilterInterface  $imagineFilter
+     * @param ElFinderSession       $session
      */
     public function __construct(
         ManagerRegistry $registry,
         $managerName,
         MediaManagerInterface $mediaManager,
         CmfMediaHelper $mediaHelper,
-        $imagineFilter = false
+        ElFinderSession $session
     ) {
         $this->dm = $registry->getManager($managerName);
         $this->mediaManager = $mediaManager;
         $this->mediaHelper = $mediaHelper;
-        $this->imagineFilter = $imagineFilter;
+        $this->session = $session;
 
         $opts = [
             'workspace' => '',
@@ -86,7 +85,7 @@ class PhpcrDriver extends \elFinderVolumeDriver
                 'resize',
             ],
         ];
-        $this->options = array_merge($this->options, $opts);
+        $this->options = array_merge(['session' => $session], $opts);
     }
 
     /**
@@ -292,9 +291,6 @@ class PhpcrDriver extends \elFinderVolumeDriver
         $tmbUrl = false;
         if ($doc instanceof ImageInterface) {
             $url = $this->mediaHelper->displayUrl($doc);
-            if ($this->imagineFilter) {
-                $tmbUrl = $this->mediaHelper->displayUrl($doc, ['imagine_filter' => $this->imagineFilter]);
-            }
         } elseif ($doc instanceof FileInterface) {
             $url = $this->mediaHelper->downloadUrl($doc);
         }
@@ -522,7 +518,6 @@ class PhpcrDriver extends \elFinderVolumeDriver
     protected function _move($source, $targetDir, $name)
     {
         $filename = $this->_joinPath($targetDir, $name);
-        $sourceDir = $this->_dirname($source);
 
         try {
             $doc = $this->dm->find(null, $source);

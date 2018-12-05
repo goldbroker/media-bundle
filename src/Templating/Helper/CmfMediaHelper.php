@@ -11,7 +11,6 @@
 
 namespace Symfony\Cmf\Bundle\MediaBundle\Templating\Helper;
 
-use Liip\ImagineBundle\Templating\Helper\FilterHelper;
 use Symfony\Cmf\Bundle\MediaBundle\FileInterface;
 use Symfony\Cmf\Bundle\MediaBundle\ImageInterface;
 use Symfony\Cmf\Bundle\MediaBundle\MediaManagerInterface;
@@ -22,20 +21,17 @@ class CmfMediaHelper extends Helper
 {
     protected $mediaManager;
     protected $generator;
-    protected $imagineHelper;
 
     /**
      * Constructor.
      *
      * @param MediaManagerInterface $mediaManager
      * @param UrlGeneratorInterface $router        A Router instance
-     * @param FilterHelper          $imagineHelper Imagine helper to use if available
      */
-    public function __construct(MediaManagerInterface $mediaManager, UrlGeneratorInterface $router, FilterHelper $imagineHelper = null)
+    public function __construct(MediaManagerInterface $mediaManager, UrlGeneratorInterface $router)
     {
         $this->mediaManager = $mediaManager;
         $this->generator = $router;
-        $this->imagineHelper = $imagineHelper;
     }
 
     /**
@@ -65,14 +61,6 @@ class CmfMediaHelper extends Helper
     public function displayUrl(ImageInterface $file, array $options = [], $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
     {
         $urlSafePath = $this->mediaManager->getUrlSafePath($file);
-
-        if ($this->imagineHelper && isset($options['imagine_filter']) && is_string($options['imagine_filter'])) {
-            return $this->imagineHelper->filter(
-                $urlSafePath,
-                $options['imagine_filter'],
-                isset($options['imagine_runtime_config']) ? $options['imagine_runtime_config'] : []
-            );
-        }
 
         return $this->generator->generate('cmf_media_image_display', ['path' => $urlSafePath], $referenceType);
     }

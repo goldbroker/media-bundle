@@ -11,12 +11,16 @@
 
     <services>
 
+        <service id="elfinder_session" class="FM\ElfinderBundle\Session\ElFinderSession">
+            <argument type="service" id="session" />
+        </service>
+
         <service id="cmf_media.adapter.elfinder.phpcr_driver" class="%cmf_media.adapter.elfinder.phpcr_driver.class%">
             <argument type="service" id="doctrine_phpcr" />
             <argument>%cmf_media.persistence.phpcr.manager_name%</argument>
             <argument type="service" id="cmf_media.persistence.phpcr.manager" />
             <argument type="service" id="cmf_media.templating.helper" />
-            <argument>%cmf_media.imagine.filter.elfinder_thumbnail%</argument>
+            <argument type="service" id="elfinder_session" />
         </service>
 
         <service id="cmd_media.browser_file_helper.default_elfinder" class="%cmd_media.browser_file_helper.default_elfinder.class%" public="false">
