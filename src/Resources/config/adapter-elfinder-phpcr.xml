@@ -15,7 +15,7 @@
             <argument type="service" id="session" />
         </service>
 
-        <service id="cmf_media.adapter.elfinder.phpcr_driver" class="%cmf_media.adapter.elfinder.phpcr_driver.class%">
+        <service id="cmf_media.adapter.elfinder.phpcr_driver" class="%cmf_media.adapter.elfinder.phpcr_driver.class%" public="true">
             <argument type="service" id="doctrine_phpcr" />
             <argument>%cmf_media.persistence.phpcr.manager_name%</argument>
             <argument type="service" id="cmf_media.persistence.phpcr.manager" />
